@@ -1,0 +1,19 @@
+@page "/Admin"
+@model LibreVLE.Api.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card admin-card">
+            <div class="card-body">
+                <h5 class="card-title">Students</h5>
+                <p class="card-text display-6">@Model.StudentCount</p>
+                <a href="/Admin/Students" class="btn btn-sm btn-outline-primary">Manage</a>
+            </div>
+        </div>
+    </div>
+</div>

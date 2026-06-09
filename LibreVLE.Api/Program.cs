@@ -33,6 +33,9 @@ else
     });
 }
 
+// ── Razor Pages ───────────────────────────────────────────────────────────────
+builder.Services.AddRazorPages();
+
 // ── Compression ──────────────────────────────────────────────────────────────
 builder.Services.AddResponseCompression(opts =>
 {
@@ -99,6 +102,9 @@ var students = app.MapGroup("/api/v1/students").WithTags("Students");
 students.MapGet("/", async (AppDbContext db) =>
     await db.Students.AsNoTracking().ToListAsync())
     .WithName("GetStudents");
+
+// ── Admin Razor Pages ─────────────────────────────────────────────────────────
+app.MapRazorPages();
 
 // ── SPA static files ─────────────────────────────────────────────────────────
 app.UseDefaultFiles();
