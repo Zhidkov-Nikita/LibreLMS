@@ -1,6 +1,6 @@
 # LibreLMS
 
-LibreLMS (также LibreLMS) -- свободная система управления обучением (Learning Management System) с REST API и панелью администратора на ASP.NET Core.
+LibreLMS -- свободная система управления обучением (Learning Management System) с REST API и панелью администратора на ASP.NET Core.
 
 ## Purpose of the Project
 
