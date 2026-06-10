@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibreVLE.Api.Pages.Admin;
+namespace LibreLMS.Api.Pages.Admin;
 
 public sealed class IndexModel(AppDbContext db) : PageModel
 {

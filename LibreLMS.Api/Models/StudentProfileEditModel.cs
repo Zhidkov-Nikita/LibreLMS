@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LibreVLE.Api.Models;
+namespace LibreLMS.Api.Models;
 
 public sealed class StudentProfileEditModel
 {

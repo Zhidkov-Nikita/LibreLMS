@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace LibreVLE.Api;
+namespace LibreLMS.Api;
 
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

@@ -1,10 +1,10 @@
-# LibreVLE
+# LibreLMS
 
-LibreVLE (также LibreLMS) -- свободная система управления обучением (Learning Management System) с REST API и панелью администратора на ASP.NET Core.
+LibreLMS (также LibreLMS) -- свободная система управления обучением (Learning Management System) с REST API и панелью администратора на ASP.NET Core.
 
 ## Purpose of the Project
 
-LibreVLE предназначена для вузов, преподавателей и студентов, которым требуется открытая, расширяемая и контролируемая среда электронного обучения. Система предоставляет базовые функции LMS: управление профилями студентов, RESTful API для интеграции с внешними сервисами и веб-интерфейс администратора.
+LibreLMS предназначена для вузов, преподавателей и студентов, которым требуется открытая, расширяемая и контролируемая среда электронного обучения. Система предоставляет базовые функции LMS: управление профилями студентов, RESTful API для интеграции с внешними сервисами и веб-интерфейс администратора.
 
 ## Prerequisites
 
@@ -20,13 +20,13 @@ LibreVLE предназначена для вузов, преподавател�
 
 ```powershell
 git clone https://github.com/Zhidkov-Nikita/LibreLMS.git
-cd LibreVLE
+cd LibreLMS
 
 copy .env.example .env
 # Отредактируйте .env, указав актуальные учётные данные PostgreSQL
 
 dotnet restore
-dotnet run --project LibreVLE.Api
+dotnet run --project LibreLMS.Api
 ```
 
 После запуска приложение будет доступно по адресу `http://localhost:5000`. Панель администратора -- `http://localhost:5000/Admin`.
@@ -52,13 +52,13 @@ export PATH="$HOME/.dotnet:$PATH"
 
 ```bash
 git clone https://github.com/Zhidkov-Nikita/LibreLMS.git
-cd LibreVLE
+cd LibreLMS
 
 cp .env.example .env
 # Отредактируйте .env, указав актуальные учётные данные PostgreSQL
 
 dotnet restore
-dotnet run --project LibreVLE.Api
+dotnet run --project LibreLMS.Api
 ```
 
 Приложение запустится на `http://localhost:5000`. Панель администратора -- `http://localhost:5000/Admin`.
@@ -67,12 +67,12 @@ dotnet run --project LibreVLE.Api
 
 ## Project Structure
 
-- `LibreVLE.Api/` -- основной проект ASP.NET Core
-- `LibreVLE.Api/Program.cs` -- точка входа, настройка сервисов, middleware и маршрутизация
-- `LibreVLE.Api/AppDbContext.cs` -- контекст базы данных Entity Framework Core
-- `LibreVLE.Api/StudentProfile.cs` -- доменная сущность профиля студента
-- `LibreVLE.Api/Models/` -- модели представления (view models) для форм редактирования
-- `LibreVLE.Api/Pages/Admin/` -- Razor Pages панели администратора (дашборд, CRUD студентов)
-- `LibreVLE.Api/Pages/Shared/_Layout.cshtml` -- мастер-страница с боковой панелью
-- `LibreVLE.Api/wwwroot/` -- статические файлы (CSS, HTML-заглушка SPA)
+- `LibreLMS.Api/` -- основной проект ASP.NET Core
+- `LibreLMS.Api/Program.cs` -- точка входа, настройка сервисов, middleware и маршрутизация
+- `LibreLMS.Api/AppDbContext.cs` -- контекст базы данных Entity Framework Core
+- `LibreLMS.Api/StudentProfile.cs` -- доменная сущность профиля студента
+- `LibreLMS.Api/Models/` -- модели представления (view models) для форм редактирования
+- `LibreLMS.Api/Pages/Admin/` -- Razor Pages панели администратора (дашборд, CRUD студентов)
+- `LibreLMS.Api/Pages/Shared/_Layout.cshtml` -- мастер-страница с боковой панелью
+- `LibreLMS.Api/wwwroot/` -- статические файлы (CSS, HTML-заглушка SPA)
 - `.env.example` -- шаблон файла с переменными окружения (строка подключения к PostgreSQL)

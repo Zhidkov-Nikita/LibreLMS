@@ -1,4 +1,4 @@
-namespace LibreVLE.Api;
+namespace LibreLMS.Api;
 
 public sealed class StudentProfile
 {

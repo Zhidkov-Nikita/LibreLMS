@@ -1,9 +1,9 @@
-using LibreVLE.Api.Models;
+using LibreLMS.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibreVLE.Api.Pages.Admin.Students;
+namespace LibreLMS.Api.Pages.Admin.Students;
 
 public sealed class EditModel(AppDbContext db) : PageModel
 {

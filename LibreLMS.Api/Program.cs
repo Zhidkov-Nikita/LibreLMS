@@ -1,4 +1,4 @@
-using LibreVLE.Api;
+using LibreLMS.Api;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 

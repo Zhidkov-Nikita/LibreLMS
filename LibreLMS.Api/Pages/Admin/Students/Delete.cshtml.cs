@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibreVLE.Api.Pages.Admin.Students;
+namespace LibreLMS.Api.Pages.Admin.Students;
 
 public sealed class DeleteModel(AppDbContext db) : PageModel
 {
