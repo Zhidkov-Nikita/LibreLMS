@@ -1,0 +1,86 @@
+@page "/Admin/Users/Edit"
+@model EditModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Change user" : "Add user";
+}
+
+<h2>@(Model.IsEdit ? "Change user" : "Add user")</h2>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    @if (Model.IsEdit)
+    {
+        <input type="hidden" asp-for="Form.Id" />
+    }
+
+    <div class="mb-3">
+        <label asp-for="Form.Email" class="form-label"></label>
+        <input asp-for="Form.Email" class="form-control form-control-sm" />
+        <span asp-validation-for="Form.Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Form.Role" class="form-label"></label>
+        <select asp-for="Form.Role" class="form-select form-select-sm"
+                asp-items="Html.GetEnumSelectList<Role>()"
+                onchange="toggleStudentFields(this.value)"></select>
+        <span asp-validation-for="Form.Role" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Form.Password" class="form-label"></label>
+        <input asp-for="Form.Password" class="form-control form-control-sm"
+               placeholder="@(Model.IsEdit ? "Leave blank to keep current" : "")" />
+        <span asp-validation-for="Form.Password" class="text-danger"></span>
+        @if (Model.IsEdit)
+        {
+            <small class="text-muted">Leave blank to keep current password.</small>
+        }
+    </div>
+
+    <div id="studentFields" style="@(Model.Form.Role != Role.Student ? "display:none" : "")">
+        <hr />
+        <h5>Student Profile</h5>
+
+        <div class="mb-3">
+            <label asp-for="Form.FirstName" class="form-label"></label>
+            <input asp-for="Form.FirstName" class="form-control form-control-sm" />
+            <span asp-validation-for="Form.FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Form.LastName" class="form-label"></label>
+            <input asp-for="Form.LastName" class="form-control form-control-sm" />
+            <span asp-validation-for="Form.LastName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Form.EnrollmentDate" class="form-label"></label>
+            <input asp-for="Form.EnrollmentDate" class="form-control form-control-sm" type="date" />
+            <span asp-validation-for="Form.EnrollmentDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn admin-btn">@(Model.IsEdit ? "Save" : "Create")</button>
+        <a href="/Admin/Users" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function toggleStudentFields(role) {
+            var el = document.getElementById('studentFields');
+            if (el) el.style.display = role === 'Student' ? '' : 'none';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.21.0/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+}

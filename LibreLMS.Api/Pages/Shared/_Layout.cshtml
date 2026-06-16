@@ -11,7 +11,10 @@
     <header class="admin-header">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="/Admin" class="text-white text-decoration-none fs-4 fw-semibold">LibreLMS Administration</a>
-            <span class="text-white-50 small">v1.0</span>
+            <div>
+                <span class="text-white-50 small me-3">@User.Identity?.Name</span>
+                <a href="/Logout" class="text-white-50 small">Logout</a>
+            </div>
         </div>
     </header>
 
@@ -22,13 +25,13 @@
                     <h6 class="sidebar-heading">DATA</h6>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a href="/Admin/Students" class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Students") ? "active" : "")">Students</a>
+                            <a href="/Admin/Users" class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Users") ? "active" : "")">Users</a>
                         </li>
                     </ul>
                     <h6 class="sidebar-heading mt-4">ACTIONS</h6>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a href="/Admin/Students/Edit" class="nav-link">+ Add Student</a>
+                            <a href="/Admin/Users/Edit" class="nav-link">+ Add User</a>
                         </li>
                     </ul>
                 </nav>

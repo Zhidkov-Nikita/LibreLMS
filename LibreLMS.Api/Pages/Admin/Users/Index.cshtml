@@ -1,0 +1,68 @@
+@page "/Admin/Users"
+@model IndexModel
+@{
+    ViewData["Title"] = "Select user to change";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Users</h2>
+    <a href="/Admin/Users/Edit" class="btn btn-sm admin-btn">+ Add User</a>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="search" class="form-control form-control-sm" placeholder="Search by email"
+               value="@Model.SearchTerm" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Search</button>
+        <a href="/Admin/Users" class="btn btn-sm btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
+@if (Model.Users.Count == 0)
+{
+    <div class="alert alert-info">No users found.</div>
+}
+else
+{
+    <table class="table admin-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model.Users)
+            {
+                <tr>
+                    <td><a href="mailto:@u.Email">@u.Email</a></td>
+                    <td>
+                        <span class="badge @(u.Role == Role.Admin ? "bg-danger" : u.Role == Role.Teacher ? "bg-warning text-dark" : "bg-info")">
+                            @u.Role
+                        </span>
+                    </td>
+                    <td>@(u.StudentProfile?.FullName ?? "—")</td>
+                    <td class="text-end">
+                        <a href="/Admin/Users/Edit?id=@u.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="/Admin/Users/Delete?id=@u.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination pagination-sm">
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="/Admin/Users?page=@i&search=@Model.SearchTerm">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

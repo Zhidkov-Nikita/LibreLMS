@@ -1,0 +1,48 @@
+@page "/Admin/Users/Delete"
+@model DeleteModel
+@{
+    ViewData["Title"] = "Confirm delete";
+}
+
+@if (Model.User is null)
+{
+    <div class="alert alert-danger">User not found.</div>
+    <a href="/Admin/Users" class="btn btn-outline-secondary">Back to list</a>
+}
+else if (Model.Deleted)
+{
+    <div class="alert alert-success">
+        User "@Model.User.Email" was deleted successfully.
+    </div>
+    <a href="/Admin/Users" class="btn btn-outline-secondary">Back to list</a>
+}
+else
+{
+    <h2>Are you sure?</h2>
+
+    <p class="text-muted">
+        Delete user <strong>@Model.User.Email</strong>?
+    </p>
+
+    <table class="table admin-table mb-4">
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>Id</td><td>@Model.User.Id</td></tr>
+        <tr><td>Email</td><td>@Model.User.Email</td></tr>
+        <tr><td>Role</td><td>@Model.User.Role</td></tr>
+        @if (Model.User.StudentProfile is not null)
+        {
+            <tr><td>First Name</td><td>@Model.User.StudentProfile.FirstName</td></tr>
+            <tr><td>Last Name</td><td>@Model.User.StudentProfile.LastName</td></tr>
+            <tr><td>Enrollment Date</td><td>@Model.User.StudentProfile.EnrollmentDate.ToString("yyyy-MM-dd")</td></tr>
+        }
+    </table>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.User.Id" />
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="/Admin/Users" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+}

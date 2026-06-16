@@ -7,12 +7,36 @@
 <h2>Dashboard</h2>
 
 <div class="row mt-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <div class="card admin-card">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <p class="card-text display-6">@Model.TotalUsers</p>
+                <a href="/Admin/Users" class="btn btn-sm btn-outline-primary">Manage</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card admin-card">
+            <div class="card-body">
+                <h5 class="card-title">Admins</h5>
+                <p class="card-text display-6">@Model.AdminCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card admin-card">
+            <div class="card-body">
+                <h5 class="card-title">Teachers</h5>
+                <p class="card-text display-6">@Model.TeacherCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card admin-card">
             <div class="card-body">
                 <h5 class="card-title">Students</h5>
                 <p class="card-text display-6">@Model.StudentCount</p>
-                <a href="/Admin/Students" class="btn btn-sm btn-outline-primary">Manage</a>
             </div>
         </div>
     </div>

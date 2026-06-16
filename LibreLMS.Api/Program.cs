@@ -1,8 +1,9 @@
 using LibreLMS.Api;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
-// ── .env loading (project dir → solution root → bin dir) ────────────────────
 var envFile = ResolveEnvFilePath();
 
 if (envFile is not null)
@@ -17,7 +18,6 @@ else
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Connection string from .env ──────────────────────────────────────────────
 var connStr = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__POSTGRES");
 
 if (string.IsNullOrWhiteSpace(connStr))
@@ -33,10 +33,31 @@ else
     });
 }
 
-// ── Razor Pages ───────────────────────────────────────────────────────────────
-builder.Services.AddRazorPages();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(opts =>
+    {
+        opts.LoginPath = "/Login";
+        opts.AccessDeniedPath = "/Login";
+        opts.ExpireTimeSpan = TimeSpan.FromHours(8);
+        opts.SlidingExpiration = true;
+    });
 
-// ── Compression ──────────────────────────────────────────────────────────────
+builder.Services.AddAuthorization(opts =>
+{
+    opts.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    opts.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
+
+builder.Services.AddRazorPages(opts =>
+{
+    opts.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
+    opts.Conventions.AllowAnonymousToPage("/Login");
+});
+
 builder.Services.AddResponseCompression(opts =>
 {
     opts.EnableForHttps = true;
@@ -44,7 +65,6 @@ builder.Services.AddResponseCompression(opts =>
     opts.Providers.Add<GzipCompressionProvider>();
 });
 
-// ── CORS ─────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("SpaPolicy", policy =>
@@ -56,63 +76,65 @@ builder.Services.AddCors(opts =>
     });
 });
 
-// ── Database (PostgreSQL) ────────────────────────────────────────────────────
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseNpgsql(connStr ?? builder.Configuration.GetConnectionString("Postgres")));
 
 var app = builder.Build();
 
-// ── Middleware ───────────────────────────────────────────────────────────────
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 app.UseCors("SpaPolicy");
 
-// ── Seed ─────────────────────────────────────────────────────────────────────
+app.UseAuthentication();
+app.UseAuthorization();
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 
-    if (!db.Students.Any())
+    if (!db.Users.Any(u => u.Role == Role.Admin))
     {
-        db.Students.AddRange(
-            new StudentProfile
-            {
-                Id = Guid.NewGuid(),
-                FirstName = "Alice",
-                LastName = "Johnson",
-                Email = "alice@example.com",
-                EnrollmentDate = DateOnly.FromDateTime(DateTime.UtcNow)
-            },
-            new StudentProfile
-            {
-                Id = Guid.NewGuid(),
-                FirstName = "Bob",
-                LastName = "Smith",
-                Email = "bob@example.com",
-                EnrollmentDate = DateOnly.FromDateTime(DateTime.UtcNow)
-            });
+        db.Users.Add(new User
+        {
+            Id = Guid.NewGuid(),
+            Email = "admin@librelms.com",
+            Role = Role.Admin,
+            PasswordHash = PasswordHasher.Hash("LibreLMS%")
+        });
+
         db.SaveChanges();
+        Console.WriteLine("[INFO] Master admin account seeded.");
     }
 }
 
-// ── Endpoints ────────────────────────────────────────────────────────────────
-var students = app.MapGroup("/api/v1/students").WithTags("Students");
+var students = app.MapGroup("/api/v1/students")
+    .RequireAuthorization("AdminOnly")
+    .WithTags("Students");
 
 students.MapGet("/", async (AppDbContext db) =>
-    await db.Students.AsNoTracking().ToListAsync())
+    await db.Users
+        .Where(u => u.Role == Role.Student)
+        .Include(u => u.StudentProfile)
+        .Select(u => new
+        {
+            u.Id,
+            u.Email,
+            FirstName = u.StudentProfile!.FirstName,
+            LastName = u.StudentProfile.LastName,
+            EnrollmentDate = u.StudentProfile.EnrollmentDate
+        })
+        .AsNoTracking()
+        .ToListAsync())
     .WithName("GetStudents");
 
-// ── Admin Razor Pages ─────────────────────────────────────────────────────────
 app.MapRazorPages();
 
-// ── SPA static files ─────────────────────────────────────────────────────────
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.Run();
 
-// ── Local helper ─────────────────────────────────────────────────────────────
 static string? ResolveEnvFilePath()
 {
     var cwd = Directory.GetCurrentDirectory();
@@ -120,10 +142,10 @@ static string? ResolveEnvFilePath()
 
     var candidates = new[]
     {
-        cwd,                                          // project dir (dotnet run --project)
-        Path.Combine(cwd, ".."),                      // solution root (one level up)
-        baseDir,                                      // bin/Debug/net10.0
-        Path.Combine(baseDir, "..", "..", ".."),      // project dir from bin
+        cwd,
+        Path.Combine(cwd, ".."),
+        baseDir,
+        Path.Combine(baseDir, "..", "..", ".."),
     };
 
     foreach (var dir in candidates)
