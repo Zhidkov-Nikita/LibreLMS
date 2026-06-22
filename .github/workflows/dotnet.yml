@@ -1,0 +1,48 @@
+name: ASP.NET Core 10 CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build & Test (.NET 10)
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Pull down the source code
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Inject missing system dependencies for act local runner compatibility
+    - name: Install Missing Prereqs (curl)
+      run: |
+        if command -v apt-get >/dev/null; then
+          sudo apt-get update && sudo apt-get install -y curl
+        elif command -v apk >/dev/null; then
+          apk add --no-cache curl
+        fi
+
+    # 2. Install and cache the latest stable .NET 10 SDK
+    - name: Setup .NET 10 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    # 3. Restore NuGet packages pointing directly to your valid project file path
+    - name: Restore Dependencies
+      run: dotnet restore ./LibreLMS.Api/LibreLMS.Api.csproj
+
+    # 4. Build the project pointing to the same file
+    - name: Build Application
+      run: dotnet build ./LibreLMS.Api/LibreLMS.Api.csproj --no-restore --configuration Release
+
+    # 5. Execute your unit/integration test suites
+    - name: Run Tests
+      run: dotnet test ./LibreLMS.Api/LibreLMS.Api.csproj --no-build --configuration Release --verbosity normal
+
+    # 6. Publish the output binaries pointing to the project target explicitly
+    - name: Publish Web App
+      run: dotnet publish ./LibreLMS.Api/LibreLMS.Api.csproj --no-build --configuration Release --output ./publish
