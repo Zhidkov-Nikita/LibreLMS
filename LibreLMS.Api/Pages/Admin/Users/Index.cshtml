@@ -38,8 +38,8 @@ else
         <tbody>
             @foreach (var u in Model.Users)
             {
-                <tr>
-                    <td><a href="mailto:@u.Email">@u.Email</a></td>
+                <tr class="position-relative">
+                    <td><a class="position-relative z-3" href="mailto:@u.Email">@u.Email</a></td>
                     <td>
                         <span class="badge @(u.Role == Role.Admin ? "bg-danger" : u.Role == Role.Teacher ? "bg-warning text-dark" : "bg-info")">
                             @u.Role
@@ -47,8 +47,8 @@ else
                     </td>
                     <td>@(u.StudentProfile?.FullName ?? "—")</td>
                     <td class="text-end">
-                        <a href="/Admin/Users/Edit?id=@u.Id" class="btn btn-sm btn-outline-primary">Edit</a>
-                        <a href="/Admin/Users/Delete?id=@u.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        <a href="/Admin/Users/Edit?id=@u.Id" class="btn btn-sm stretched-link btn-outline-primary">Edit</a>
+                        <a href="/Admin/Users/Delete?id=@u.Id" class="btn btn-sm btn-outline-danger position-relative z-1">Delete</a>
                     </td>
                 </tr>
             }

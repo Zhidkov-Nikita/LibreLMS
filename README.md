@@ -84,7 +84,7 @@ dotnet run --project LibreLMS.Api
 Если у вас есть база данных от старой схемы, сначала примените SQL-миграцию:
 
 ```bash
-psql -d your_database -f LibreLMS.Api/Migrations/0001_StudentsToUsers.sql
+psql -d your_database -f LibreLMS.Api/Core/Data/Migrations/0001_StudentsToUsers.sql
 dotnet run --project LibreLMS.Api
 ```
 
@@ -107,22 +107,60 @@ dotnet ef database update --project LibreLMS.Api
 
 > **⚠ Замечание по безопасности** — Этот пароль задан в `Program.cs` для начальной загрузки. **Смените его сразу** после первого входа. В production отключите блок сидирования или вынесите создание учётной записи в защищённое внешнее хранилище.
 
-## Project Structure
+## Project Structure (Module-Based)
 
-- `LibreLMS.Api/` — основной проект ASP.NET Core
-- `LibreLMS.Api/Program.cs` — точка входа, auth-конвейер, настройка сервисов и маршрутизация
-- `LibreLMS.Api/AppDbContext.cs` — контекст базы данных EF Core (Users + StudentProfiles)
-- `LibreLMS.Api/User.cs` — центральная сущность пользователя
-- `LibreLMS.Api/Role.cs` — enum ролей (Admin / Teacher / Student)
-- `LibreLMS.Api/StudentProfile.cs` — профиль студента (FK → Users)
-- `LibreLMS.Api/PasswordHasher.cs` — обёртка BCrypt
-- `LibreLMS.Api/Models/` — модели представления (view models) для форм редактирования
-- `LibreLMS.Api/Pages/` — Razor Pages (Login, Logout, Admin/*)
-- `LibreLMS.Api/Pages/Admin/` — панель администратора (дашборд, CRUD студентов)
-- `LibreLMS.Api/Migrations/` — скрипты SQL-миграций
-- `LibreLMS.Api/wwwroot/` — статические файлы (CSS, HTML-заглушка SPA)
-- `wwwroot/` — корень SPA-фронтенда
-- `.env.example` — шаблон файла с переменными окружения
+```
+LibreLMS/
+├── .env.example                           # Шаблон переменных окружения
+├── README.md
+├── wwwroot/                               # Корень SPA-фронтенда
+└── LibreLMS.Api/                          # Основной проект ASP.NET Core
+    ├── Program.cs                         # Точка входа, DI, middleware pipeline
+    ├── Properties/
+    │   └── launchSettings.json
+    │
+    ├── Core/                              # Ядро — общая инфраструктура
+    │   ├── Data/
+    │   │   ├── AppDbContext.cs            # EF Core контекст (Users + StudentProfiles)
+    │   │   └── Migrations/                # SQL-скрипты миграций
+    │   └── Security/
+    │       └── PasswordHasher.cs          # BCrypt-обёртка (work factor 12)
+    │
+    ├── Features/                          # Доменные модули (Django Apps style)
+    │   ├── Auth/                          # ── Модуль аутентификации ──
+    │   │   └── Models/
+    │   │       ├── User.cs                # Центральная сущность пользователя
+    │   │       └── Role.cs                # Enum: Admin / Teacher / Student
+    │   └── Students/                      # ── Модуль студентов ──
+    │       └── Models/
+    │           └── StudentProfile.cs      # Профиль студента (FK → User)
+    │
+    ├── Pages/                             # Razor Pages (по конвенции)
+    │   ├── _ViewImports.cshtml
+    │   ├── _ViewStart.cshtml
+    │   ├── Shared/
+    │   │   └── _Layout.cshtml             # Мастер-страница с боковой панелью
+    │   │
+    │   ├── Auth/                          # ── Страницы модуля Auth ──
+    │   │   ├── Login.cshtml / .cs         # Вход в систему
+    │   │   └── Logout.cshtml / .cs        # Выход из системы
+    │   │
+    │   └── Admin/                         # ── Страницы модуля Admin ──
+    │       ├── Models/
+    │       │   └── UserEditModel.cs       # ViewModel для формы пользователя
+    │       ├── Index.cshtml / .cs         # Дашборд (статистика по ролям)
+    │       └── Users/                     # CRUD пользователей
+    │           ├── Index.cshtml / .cs     # Список + поиск
+    │           ├── Edit.cshtml / .cs      # Создание / редактирование
+    │           └── Delete.cshtml / .cs    # Подтверждение удаления
+    │
+    ├── Migrations/                        # EF Core миграции (авто-генерируемые)
+    │   ├── 20260616140759_InitialCleanSchema.cs
+    │   └── AppDbContextModelSnapshot.cs
+    │
+    └── wwwroot/
+        └── css/
+            └── admin.css                  # Стили панели администратора
 
 ## User Management Dashboard
 
