@@ -1,6 +1,7 @@
 # LibreLMS
 <p>
   <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Zhidkov-Nikita/LibreLMS/dotnet.yml">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Zhidkov-Nikita/LibreLMS/codeql.yml?logo=github&label=codeql">
   <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Zhidkov-Nikita/LibreLMS">
   <img alt="GitHub License" src="https://img.shields.io/github/license/Zhidkov-Nikita/LibreLMS">
   <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Zhidkov-Nikita/LibreLMS">
