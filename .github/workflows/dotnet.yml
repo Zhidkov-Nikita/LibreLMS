@@ -36,16 +36,16 @@ jobs:
 
     # 3. Restore NuGet packages pointing directly to your valid project file path
     - name: Restore Dependencies
-      run: dotnet restore ./LibreLMS.Api/LibreLMS.Api.csproj
+      run: dotnet restore ./LibreStudium.Api/LibreStudium.Api.csproj
 
     # 4. Build the project pointing to the same file
     - name: Build Application
-      run: dotnet build ./LibreLMS.Api/LibreLMS.Api.csproj --no-restore --configuration Release
+      run: dotnet build ./LibreStudium.Api/LibreStudium.Api.csproj --no-restore --configuration Release
 
     # 5. Execute your unit/integration test suites
     - name: Run Tests
-      run: dotnet test ./LibreLMS.Api/LibreLMS.Api.csproj --no-build --configuration Release --verbosity normal
+      run: dotnet test ./LibreStudium.Api/LibreStudium.Api.csproj --no-build --configuration Release --verbosity normal
 
     # 6. Publish the output binaries pointing to the project target explicitly
     - name: Publish Web App
-      run: dotnet publish ./LibreLMS.Api/LibreLMS.Api.csproj --no-build --configuration Release --output ./publish
+      run: dotnet publish ./LibreStudium.Api/LibreStudium.Api.csproj --no-build --configuration Release --output ./publish

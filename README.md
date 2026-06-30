@@ -1,13 +1,13 @@
-# LibreLMS
+# LibreStudium
 <p>
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Zhidkov-Nikita/LibreLMS/dotnet.yml">
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Zhidkov-Nikita/LibreLMS/codeql.yml?logo=github&label=codeql">
-  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Zhidkov-Nikita/LibreLMS">
-  <img alt="GitHub License" src="https://img.shields.io/github/license/Zhidkov-Nikita/LibreLMS">
-  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Zhidkov-Nikita/LibreLMS">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/LibreStudium/core/dotnet.yml">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/LibreStudium/core/codeql.yml?logo=github&label=codeql">
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/LibreStudium/core">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/LibreStudium/core">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/LibreStudium/core">
 </p>
 
-LibreLMS — свободная система управления обучением (Learning Management System) на ASP.NET Core.
+LibreStudium — свободная электронная информационно-образовательная среда на ASP.NET Core.
 
 ## Оглавление
 
@@ -28,11 +28,11 @@ LibreLMS — свободная система управления обучен
 
 ## Цель проекта
 
-LibreLMS предназначена для вузов, преподавателей и студентов, которым требуется открытая, расширяемая и контролируемая среда электронного обучения.
+LibreStudium предназначена для вузов, преподавателей и студентов, которым требуется открытая, расширяемая и контролируемая среда электронного обучения.
 
 ## Философия безопасности
 
-Каждая конечная точка LibreLMS **по умолчанию заблокирована**, если явно не разрешена. Конвейер middleware применяет глобальный `FallbackPolicy`, требующий аутентифицированного пользователя, а политика `AdminOnly` ограничивает все маршруты административной панели и API пользователями с ролью `Admin`.
+Каждая конечная точка LibreStudium **по умолчанию заблокирована**, если явно не разрешена. Конвейер middleware применяет глобальный `FallbackPolicy`, требующий аутентифицированного пользователя, а политика `AdminOnly` ограничивает все маршруты административной панели и API пользователями с ролью `Admin`.
 
 ## Модель ролей
 
@@ -57,14 +57,14 @@ LibreLMS предназначена для вузов, преподавател�
 Откройте PowerShell или Командную строку и выполните:
 
 ```powershell
-git clone https://github.com/Zhidkov-Nikita/LibreLMS.git
-cd LibreLMS
+git clone https://github.com/LibreStudium/core.git
+cd LibreStudium
 
 copy .env.example .env
 # Отредактируйте .env, указав актуальные учётные данные PostgreSQL
 
 dotnet restore
-dotnet run --project LibreLMS.Api
+dotnet run --project LibreStudium.Api
 ```
 
 После запуска приложение будет доступно по адресу `http://localhost:5000`. Панель администратора — `http://localhost:5000/admin`.
@@ -89,14 +89,14 @@ export PATH="$HOME/.dotnet:$PATH"
 Клонируйте и запустите проект:
 
 ```bash
-git clone https://github.com/Zhidkov-Nikita/LibreLMS.git
-cd LibreLMS
+git clone https://github.com/LibreStudium/core.git
+cd LibreStudium
 
 cp .env.example .env
 # Отредактируйте .env, указав актуальные учётные данные PostgreSQL
 
 dotnet restore
-dotnet run --project LibreLMS.Api
+dotnet run --project LibreStudium.Api
 ```
 
 Приложение запустится на `http://localhost:5000`. Панель администратора — `http://localhost:5000/Admin`.
@@ -108,8 +108,8 @@ dotnet run --project LibreLMS.Api
 Если у вас есть база данных от старой схемы, сначала примените SQL-миграцию:
 
 ```bash
-psql -d YOUR_DATABASE -f LibreLMS.Api/Core/Data/Migrations/0001_StudentsToUsers.sql
-dotnet run --project LibreLMS.Api
+psql -d YOUR_DATABASE -f LibreStudium.Api/Core/Data/Migrations/0001_StudentsToUsers.sql
+dotnet run --project LibreStudium.Api
 ```
 
 ### EF Core миграции (production)
@@ -118,27 +118,27 @@ dotnet run --project LibreLMS.Api
 
 ```bash
 dotnet tool install --global dotnet-ef
-dotnet ef migrations add MigrationName --project LibreLMS.Api
-dotnet ef database update --project LibreLMS.Api
+dotnet ef migrations add MigrationName --project LibreStudium.Api
+dotnet ef database update --project LibreStudium.Api
 ```
 
 ## Учётная запись администратора по умолчанию
 
 | Поле     | Значение                            |
 |----------|-------------------------------------|
-| Email    | `admin@librelms.com`               |
-| Password | `LibreLMS%`                        |
+| Email    | `admin@librestudium.com`               |
+| Password | `LibreStudium%`                        |
 
 > **⚠ Замечание по безопасности** — Этот пароль задан в `Program.cs` для начальной загрузки. **Смените его сразу** после первого входа. В production отключите блок сидирования или вынесите создание учётной записи в защищённое внешнее хранилище.
 
 ## Структура проекта
 
 ```
-LibreLMS/
+LibreStudium/
 ├── .env.example                           # Шаблон переменных окружения
 ├── README.md
 ├── wwwroot/                               # Корень SPA-фронтенда
-└── LibreLMS.Api/                          # Основной проект ASP.NET Core
+└── LibreStudium.Api/                          # Основной проект ASP.NET Core
     ├── Program.cs                         # Точка входа, DI, middleware pipeline
     ├── Properties/
     │   └── launchSettings.json
