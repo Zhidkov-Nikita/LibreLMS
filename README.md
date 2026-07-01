@@ -3,7 +3,7 @@
   <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/LibreStudium/core/dotnet.yml">
   <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/LibreStudium/core/codeql.yml?logo=github&label=codeql">
   <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/LibreStudium/core">
-  <img alt="GitHub License" src="https://img.shields.io/github/license/LibreStudium/core">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/LibreStudium/core?v=1">
   <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/LibreStudium/core">
 </p>
 
